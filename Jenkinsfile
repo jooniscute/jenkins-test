@@ -1,4 +1,4 @@
-def mainDir="~/workspace/docker-kubernetes/part2.docker_advanced/springboot"
+def mainDir="/home/jk/workspace/docker-kubernetes/part2.docker_advanced/springboot"
 def ecrLoginHelper="docker-credential-ecr-login"
 def region="ap-northeast-2"
 def ecrUrl="615052872572.dkr.ecr.ap-northeast-2.amazonaws.com"
