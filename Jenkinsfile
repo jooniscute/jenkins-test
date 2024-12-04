@@ -26,9 +26,10 @@ pipeline {
         }
         stage('Build Docker Image by Jib & Push to AWS ECR Repository') {
             steps {
-                withEnv(["AWS_PROFILE=sso-dev", "PATH+AWS=/usr/local/bin"]) {
+                withEnv(["AWS_PROFILE=sso-dev"]) {
                     sh """
                         # Log in to ECR
+                        docker --version
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}
                         # Build and push Docker image
                         cd ${mainDir}
