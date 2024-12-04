@@ -29,11 +29,10 @@ pipeline {
             steps {
                 withEnv(["AWS_PROFILE=sso-dev"]) {
                     sh """
+                        aws --version
                         # Log in to ECR
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}
-
                         # Build and push Docker image
-                        pwd
                         cd ${mainDir}
                         ./gradlew jib -Djib.to.image=${ecrUrl}/${repository}:${currentBuild.number} -Djib.console='plain'
                     """
@@ -43,9 +42,12 @@ pipeline {
         stage('Deploy to AWS EC2 VM'){
             steps{
                 sshagent(credentials : ["${jenkinsAwsKey}"]) {
-                    sh "ssh -o StrictHostKeyChecking=no ${deployAccount}@${deployHost} \
-                     'aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}/${repository}; \
-                      docker run -d -p 80:8081 -t ${ecrUrl}/${repository}:${currentBuild.number};'"
+                    sh """
+                    aws --version
+                    ssh -o StrictHostKeyChecking=no ${deployAccount}@${deployHost} \
+                    'aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}/${repository}; \
+                    docker run -d -p 80:8081 -t ${ecrUrl}/${repository}:${currentBuild.number};'
+                    """
                 }
             }
         }
