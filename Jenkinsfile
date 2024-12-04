@@ -19,7 +19,6 @@ pipeline {
         stage('Build Codes by Gradle') {
             steps {
                 sh """
-                pwd
                 cd ${mainDir}
                 ./gradlew clean build
                 """
@@ -27,7 +26,7 @@ pipeline {
         }
         stage('Build Docker Image by Jib & Push to AWS ECR Repository') {
             steps {
-                withEnv(["AWS_PROFILE=sso-dev"]) {
+                withEnv(["AWS_PROFILE=sso-dev", "PATH+AWS=/usr/local/bin"]) {
                     sh """
                         aws --version
                         # Log in to ECR
