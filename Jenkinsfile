@@ -32,6 +32,7 @@ pipeline {
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}
 
                         # Build and push Docker image
+                        pwd
                         cd ${mainDir}
                         ./gradlew jib -Djib.to.image=${ecrUrl}/${repository}:${currentBuild.number} -Djib.console='plain'
                     """
