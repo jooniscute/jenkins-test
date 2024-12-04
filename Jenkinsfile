@@ -28,11 +28,11 @@ pipeline {
             steps {
                 withEnv(["AWS_PROFILE=sso-dev", "PATH+AWS=/usr/local/bin"]) {
                     sh """
-                        aws --version
                         # Log in to ECR
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}
                         # Build and push Docker image
                         cd ${mainDir}
+                        pwd
                         ./gradlew jib -Djib.to.image=${ecrUrl}/${repository}:${currentBuild.number} -Djib.console='plain'
                     """
                 }
