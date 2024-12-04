@@ -30,6 +30,11 @@ pipeline {
                     sh """
                         # Log in to ECR
                         docker --version
+                        docker run -d \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        -v /usr/bin/git:/usr/bin/git \
+                        -v /usr/local/bin/aws:/usr/local/bin/aws \
+                        jenkins/jenkins:lts
                         aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrUrl}
                         # Build and push Docker image
                         cd ${mainDir}
